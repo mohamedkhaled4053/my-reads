@@ -18,7 +18,10 @@ function App() {
           path="/"
           element={<ListBooks myBooks={myBooks} setMyBooks={setMyBooks} />}
         />
-        <Route path="/search" element={<SearchBooks />} />
+        <Route
+          path="/search"
+          element={<SearchBooks myBooks={myBooks} setMyBooks={setMyBooks} />}
+        />
       </Routes>
     </div>
   );
@@ -41,7 +44,12 @@ function ListBooks({ myBooks, setMyBooks }) {
       <div className="list-books-content">
         <div>
           {shelfsNames.map((shelf) => (
-            <BookShelf key={shelf} name={shelf} myBooks={myBooks} setMyBooks={setMyBooks} />
+            <BookShelf
+              key={shelf}
+              name={shelf}
+              myBooks={myBooks}
+              setMyBooks={setMyBooks}
+            />
           ))}
         </div>
       </div>
@@ -98,7 +106,9 @@ function Book({ book, myBooks, setMyBooks }) {
             style={{
               width: 128,
               height: 193,
-              backgroundImage: `url(${book.imageLinks.thumbnail})`,
+              backgroundImage: `url(${
+                book.imageLinks ? book.imageLinks.thumbnail : ""
+              })`,
             }}
           ></div>
           <div className="book-shelf-changer">
@@ -114,13 +124,39 @@ function Book({ book, myBooks, setMyBooks }) {
           </div>
         </div>
         <div className="book-title">{book.title}</div>
-        <div className="book-authors">{book.authors.join(", ")}</div>
+        <div className="book-authors">
+          {book.authors ? book.authors.join(", ") : "no authors found"}
+        </div>
       </div>
     </li>
   );
 }
 
-function SearchBooks() {
+function SearchBooks({ myBooks, setMyBooks }) {
+  let [searchedBooks, setSearchedBooks] = useState([]);
+  let [query, setQuery] = useState("");
+
+  function handleChange(e) {
+    setQuery(e.target.value);
+  }
+
+  useEffect(() => {
+    let mounted = true;
+    if (query) {
+      BooksAPI.search(query, 20).then((res) => {
+        if (mounted) {
+          !res.error ? setSearchedBooks(res) : setSearchedBooks([]);
+        }
+      });
+    } else {
+      setSearchedBooks([]);
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [query]);
+
   return (
     <div className="search-books">
       <div className="search-books-bar">
@@ -128,11 +164,26 @@ function SearchBooks() {
           Close
         </Link>
         <div className="search-books-input-wrapper">
-          <input type="text" placeholder="Search by title, author, or ISBN" />
+          <input
+            type="text"
+            placeholder="Search by title, author, or ISBN"
+            onChange={handleChange}
+          />
         </div>
       </div>
       <div className="search-books-results">
-        <ol className="books-grid"></ol>
+        <ol className="books-grid">
+          {searchedBooks.length !== 0
+            ? searchedBooks.map((book) => (
+                <Book
+                  key={book.id}
+                  book={book}
+                  myBooks={myBooks}
+                  setMyBooks={setMyBooks}
+                />
+              ))
+            : "no books found"}
+        </ol>
       </div>
     </div>
   );
