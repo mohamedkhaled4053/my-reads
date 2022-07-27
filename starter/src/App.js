@@ -8,15 +8,109 @@ function App() {
 
   useEffect(() => {
     BooksAPI.getAll().then((res) => setMyBooks(res));
-  });
+  }, []);
 
   return (
     <div className="app">
       <Routes>
-        <Route path="/" element={<ListBooks myBooks={myBooks}/>} />
+        <Route
+          path="/"
+          element={<ListBooks myBooks={myBooks} setMyBooks={setMyBooks} />}
+        />
         <Route path="/search" element={<SearchBooks />} />
       </Routes>
     </div>
+  );
+}
+
+function ListBooks({ myBooks, setMyBooks }) {
+  return (
+    <div className="list-books">
+      <div className="list-books-title">
+        <h1>MyReads</h1>
+      </div>
+      <div className="list-books-content">
+        <div>
+          <BookShelf
+            name="currentlyReading"
+            myBooks={myBooks}
+            setMyBooks={setMyBooks}
+          />
+          <BookShelf
+            name="wantToRead"
+            myBooks={myBooks}
+            setMyBooks={setMyBooks}
+          />
+          <BookShelf name="read" myBooks={myBooks} setMyBooks={setMyBooks} />
+        </div>
+      </div>
+      <div className="open-search">
+        <Link to="/search">Add a book</Link>
+      </div>
+    </div>
+  );
+}
+
+function BookShelf({ name, myBooks, setMyBooks }) {
+  let books = myBooks.filter((book) => book.shelf === name);
+  return (
+    <div className="bookshelf">
+      <h2 style={{ textTransform: "capitalize" }} className="bookshelf-title">
+        {name.replace(/([A-Z])/g, " $1")}
+      </h2>
+      <div className="bookshelf-books">
+        <ol className="books-grid">
+          {books.map((book) => (
+            <Book
+              key={book.id}
+              book={book}
+              myBooks={myBooks}
+              setMyBooks={setMyBooks}
+            />
+          ))}
+        </ol>
+      </div>
+    </div>
+  );
+}
+
+function Book({ book, myBooks, setMyBooks }) {
+  
+  function handleChange(e) {
+    let newBooks = myBooks.filter((b) => b.id !== book.id);
+    book.shelf = e.target.value
+    newBooks = [...newBooks, book]
+    setMyBooks(newBooks);
+  }
+
+  return (
+    <li>
+      <div className="book">
+        <div className="book-top">
+          <div
+            className="book-cover"
+            style={{
+              width: 128,
+              height: 193,
+              backgroundImage: `url(${book.imageLinks.thumbnail})`,
+            }}
+          ></div>
+          <div className="book-shelf-changer">
+            <select onChange={handleChange} value={book.shelf}>
+              <option value="none" disabled>
+                Move to...
+              </option>
+              <option value="currentlyReading">Currently Reading</option>
+              <option value="wantToRead">Want to Read</option>
+              <option value="read">Read</option>
+              <option value="none">None</option>
+            </select>
+          </div>
+        </div>
+        <div className="book-title">{book.title}</div>
+        <div className="book-authors">{book.authors.join(", ")}</div>
+      </div>
+    </li>
   );
 }
 
@@ -35,74 +129,6 @@ function SearchBooks() {
         <ol className="books-grid"></ol>
       </div>
     </div>
-  );
-}
-
-function ListBooks({myBooks}) {
-  return (
-    <div className="list-books">
-      <div className="list-books-title">
-        <h1>MyReads</h1>
-      </div>
-      <div className="list-books-content">
-        <div>
-          <BookShilf name='currentlyReading' myBooks={myBooks}/>
-          <BookShilf name='wantToRead'myBooks={myBooks}/>
-          <BookShilf name='read'myBooks={myBooks}/>
-
-        </div>
-      </div>
-      <div className="open-search">
-        <Link to="/search">Add a book</Link>
-      </div>
-    </div>
-  );
-}
-
-function BookShilf({name, myBooks}) {
-  return (
-    <div className="bookshelf">
-      <h2 className="bookshelf-title">Currently Reading</h2>
-      <div className="bookshelf-books">
-        <ol className="books-grid">
-          <Book />
-          <Book />
-        </ol>
-      </div>
-    </div>
-  );
-}
-
-function Book() {
-  return (
-    <li>
-      <div className="book">
-        <div className="book-top">
-          <div
-            className="book-cover"
-            style={{
-              width: 128,
-              height: 193,
-              backgroundImage:
-                'url("http://books.google.com/books/content?id=PGR2AwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE73-GnPVEyb7MOCxDzOYF1PTQRuf6nCss9LMNOSWBpxBrz8Pm2_mFtWMMg_Y1dx92HT7cUoQBeSWjs3oEztBVhUeDFQX6-tWlWz1-feexS0mlJPjotcwFqAg6hBYDXuK_bkyHD-y&source=gbs_api")',
-            }}
-          ></div>
-          <div className="book-shelf-changer">
-            <select>
-              <option value="none" disabled>
-                Move to...
-              </option>
-              <option value="currentlyReading">Currently Reading</option>
-              <option value="wantToRead">Want to Read</option>
-              <option value="read">Read</option>
-              <option value="none">None</option>
-            </select>
-          </div>
-        </div>
-        <div className="book-title">To Kill a Mockingbird</div>
-        <div className="book-authors">Harper Lee</div>
-      </div>
-    </li>
   );
 }
 
