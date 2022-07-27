@@ -6,6 +6,7 @@ import * as BooksAPI from "./BooksAPI";
 function App() {
   let [myBooks, setMyBooks] = useState([]);
 
+  // get list of books from API
   useEffect(() => {
     BooksAPI.getAll().then((res) => setMyBooks(res));
   }, []);
@@ -24,6 +25,14 @@ function App() {
 }
 
 function ListBooks({ myBooks, setMyBooks }) {
+  // make array of shelfs names
+  let shelfsNames = [];
+  myBooks.forEach((book) => {
+    if (!shelfsNames.includes(book.shelf)) {
+      shelfsNames.push(book.shelf);
+    }
+  });
+
   return (
     <div className="list-books">
       <div className="list-books-title">
@@ -31,17 +40,9 @@ function ListBooks({ myBooks, setMyBooks }) {
       </div>
       <div className="list-books-content">
         <div>
-          <BookShelf
-            name="currentlyReading"
-            myBooks={myBooks}
-            setMyBooks={setMyBooks}
-          />
-          <BookShelf
-            name="wantToRead"
-            myBooks={myBooks}
-            setMyBooks={setMyBooks}
-          />
-          <BookShelf name="read" myBooks={myBooks} setMyBooks={setMyBooks} />
+          {shelfsNames.map((shelf) => (
+            <BookShelf key={shelf} name={shelf} myBooks={myBooks} setMyBooks={setMyBooks} />
+          ))}
         </div>
       </div>
       <div className="open-search">
@@ -75,12 +76,17 @@ function BookShelf({ name, myBooks, setMyBooks }) {
 }
 
 function Book({ book, myBooks, setMyBooks }) {
-  
   function handleChange(e) {
+    let newShelf = e.target.value;
+    // remove the book from the array of books
     let newBooks = myBooks.filter((b) => b.id !== book.id);
-    book.shelf = e.target.value
-    newBooks = [...newBooks, book]
+    // change the shelf of the book
+    book.shelf = newShelf;
+    // add the updated book to the array of books
+    newBooks = [...newBooks, book];
     setMyBooks(newBooks);
+    // update the API
+    BooksAPI.update(book, newShelf);
   }
 
   return (
