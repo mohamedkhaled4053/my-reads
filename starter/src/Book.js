@@ -16,7 +16,7 @@ export function Book({ book, myBooks, setMyBooks }) {
   }
 
   // recognize the books in the book list when we search
-  // when we search the book has no shelf so we add a shelf to it if it was in ours shelfs already
+  // when we search the book has no shelf so we add a shelf to it if it was in ours shelves already
   myBooks.forEach(b => {
     if(b.id === book.id ){
       book.shelf = b.shelf

@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { BookShelf } from "./BookShelf";
 
 export function ListBooks({ myBooks, setMyBooks }) {
-  // make array of shelfs names
-  let shelfsNames = ['currentlyReading', 'wantToRead', 'read'];
+  // make array of shelves names
+  let shelvesNames = ['currentlyReading', 'wantToRead', 'read'];
 
   return (
     <div className="list-books">
@@ -12,7 +12,7 @@ export function ListBooks({ myBooks, setMyBooks }) {
       </div>
       <div className="list-books-content">
         <div>
-          {shelfsNames.map((shelf) => (
+          {shelvesNames.map((shelf) => (
             <BookShelf
               key={shelf}
               name={shelf}
