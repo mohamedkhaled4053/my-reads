@@ -15,6 +15,14 @@ export function Book({ book, myBooks, setMyBooks }) {
     BooksAPI.update(book, newShelf);
   }
 
+  // recognize the books in the book list when we search
+  // when we search the book has no shelf so we add a shelf to it if it was in ours shelfs already
+  myBooks.forEach(b => {
+    if(b.id === book.id ){
+      book.shelf = b.shelf
+    }
+  });
+
   return (
     <li>
       <div className="book">
@@ -28,14 +36,14 @@ export function Book({ book, myBooks, setMyBooks }) {
             }}
           ></div>
           <div className="book-shelf-changer">
-            <select onChange={handleChange} value={book.shelf}>
+            <select onChange={handleChange} value={book.shelf || 'none'}>
               <option value="none" disabled>
-                Move to...
+                {book.shelf? 'Move to...': 'Add to...'}
               </option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
               <option value="read">Read</option>
-              <option value="none">None</option>
+              {(book.shelf) && <option value="none">None</option>}
             </select>
           </div>
         </div>
