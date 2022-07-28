@@ -29,12 +29,7 @@ function App() {
 
 function ListBooks({ myBooks, setMyBooks }) {
   // make array of shelfs names
-  let shelfsNames = [];
-  myBooks.forEach((book) => {
-    if (!shelfsNames.includes(book.shelf)) {
-      shelfsNames.push(book.shelf);
-    }
-  });
+  let shelfsNames = ['currentlyReading','wantToRead','read'];
 
   return (
     <div className="list-books">
