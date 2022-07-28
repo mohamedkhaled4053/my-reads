@@ -37,13 +37,13 @@ export function Book({ book, myBooks, setMyBooks }) {
           ></div>
           <div className="book-shelf-changer">
             <select onChange={handleChange} value={book.shelf || 'none'}>
-              <option value="none" disabled>
+              <option  disabled>
                 {book.shelf? 'Move to...': 'Add to...'}
               </option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
               <option value="read">Read</option>
-              {(book.shelf) && <option value="none">None</option>}
+              <option value="none">None</option>
             </select>
           </div>
         </div>
