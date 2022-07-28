@@ -1,4 +1,5 @@
 import * as BooksAPI from "./BooksAPI";
+import PropTypes from 'prop-types';
 
 
 export function Book({ book, myBooks, setMyBooks }) {
@@ -54,4 +55,11 @@ export function Book({ book, myBooks, setMyBooks }) {
       </div>
     </li>
   );
+}
+
+
+Book.propTypes={
+  book: PropTypes.object.isRequired,
+  myBooks: PropTypes.array.isRequired,
+  setMyBooks: PropTypes.func.isRequired
 }

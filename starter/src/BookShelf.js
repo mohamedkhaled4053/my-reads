@@ -1,4 +1,5 @@
 import { Book } from "./Book";
+import PropTypes from 'prop-types';
 
 export function BookShelf({ name, myBooks, setMyBooks }) {
   let books = myBooks.filter((book) => book.shelf === name);
@@ -20,4 +21,10 @@ export function BookShelf({ name, myBooks, setMyBooks }) {
       </div>
     </div>
   );
+}
+
+BookShelf.propTypes  = {
+  name: PropTypes.string.isRequired,
+  myBooks: PropTypes.array.isRequired,
+  setMyBooks: PropTypes.func.isRequired
 }
