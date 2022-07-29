@@ -1,4 +1,4 @@
-# Typing speed game
+# My reads
 
 
 ## Table of contents

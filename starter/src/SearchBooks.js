@@ -31,7 +31,7 @@ export function SearchBooks({ myBooks, setMyBooks }) {
   return (
     <div className="search-books">
       <div className="search-books-bar">
-        <Link to="/" className="close-search">
+        <Link to="/my-reads" className="close-search">
           Close
         </Link>
         <div className="search-books-input-wrapper">

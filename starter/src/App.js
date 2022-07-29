@@ -17,7 +17,7 @@ function App() {
     <div className="app">
       <Routes>
         <Route
-          path="/"
+          path="/my-reads"
           element={<ListBooks myBooks={myBooks} setMyBooks={setMyBooks} />}
         />
         <Route
